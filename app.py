@@ -134,17 +134,16 @@ def extract_text_pymupdf(pdf_file_path):
     return text
 
 def summarize_text(text):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo-1106",
         messages=[
             {"role": "system", "content": "Please summarize this text considering the following points: Type of Insurance, Category of Coverage, What's Covered, What's Not Covered, Events Covered, and Additional Details."},
             {"role": "user", "content": text}
         ]
     )
-    print(f'{response["usage"]["completion_tokens"]} completion_tokens counted by the OpenAI API.')
-    print(f'{response["usage"]["prompt_tokens"]} prompt_tokens counted by the OpenAI API.')
-    print(f'{response["usage"]["total_tokens"]} total_tokens counted by the OpenAI API.')
-    return response['choices'][0]['message']['content']
+
+    print("Total Tokens:", response.usage.total_tokens)
+    return(response.choices[0].message.content)
 
 if __name__ == '__main__':
     app.run(debug=True)
