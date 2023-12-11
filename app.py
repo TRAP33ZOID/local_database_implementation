@@ -19,7 +19,7 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql = MySQL()
 mysql.init_app(app)
 
-UPLOAD_FOLDER ='C:\\Users\\Waleed\\Desktop\\database\\pdf'
+UPLOAD_FOLDER ='uploads'
 ALLOWED_EXTENSIONS = {'pdf'}  # allowed file types
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -120,7 +120,7 @@ def summarize():
 
         extracted_text = extract_text_pymupdf(save_path)
         summary = summarize_text(extracted_text)
-        os.unlink(save_path)  
+        #os.unlink(save_path)  
         return jsonify({"summary": summary, "extractedText": extracted_text[:500]})
     else:
         return jsonify({"error": "Invalid file type or no file uploaded"}), 400
@@ -141,6 +141,9 @@ def summarize_text(text):
             {"role": "user", "content": text}
         ]
     )
+    print(f'{response["usage"]["completion_tokens"]} completion_tokens counted by the OpenAI API.')
+    print(f'{response["usage"]["prompt_tokens"]} prompt_tokens counted by the OpenAI API.')
+    print(f'{response["usage"]["total_tokens"]} total_tokens counted by the OpenAI API.')
     return response['choices'][0]['message']['content']
 
 if __name__ == '__main__':
